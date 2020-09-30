@@ -52,14 +52,14 @@ if __name__=="__main__":
         print("Passaram ", elapsed.secs, " segundos")
         rospy.sleep(1.0)
         
-        velocidade_saida.publish(zero)
+        velocidade_saida.publish(vel_parado)
             
         if n % 2 != 0:
             print("Andando reto.")
             print(vel_reto, "\n",  sleep_reto)
             velocidade_saida.publish(vel_reto)
             rospy.sleep(sleep_reto)
-            velocidade_saida.publish(zero)
+            velocidade_saida.publish(vel_parado)
             n+=1
                 
         elif n % 2 == 0:
@@ -67,7 +67,7 @@ if __name__=="__main__":
             print(vel_muda_direcao, "\n",  sleep_muda_direcao)
             velocidade_saida.publish(vel_muda_direcao)
             rospy.sleep(sleep_muda_direcao)
-            velocidade_saida.publish(zero)
+            velocidade_saida.publish(vel_parado)
             n+=1
                 
         else:

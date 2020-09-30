@@ -28,7 +28,7 @@ if __name__=="__main__":
     
     n=1
     
-    ang = math.pi/2
+    ang = math.radians(90)
     dist = 5
     
     max_angular = 0.4
@@ -38,8 +38,8 @@ if __name__=="__main__":
     vel_reto = Twist(Vector3(max_linear, 0, 0), Vector3(0, 0, 0))
     vel_muda_direcao = Twist(Vector3(0, 0, 0), Vector3(0, 0, max_angular))
 
-    sleep_muda_direcao = abs(ang/max_angular)
     sleep_reto = abs(dist/max_linear)
+    sleep_muda_direcao = abs(ang/max_angular)
 
     while not rospy.is_shutdown():
         print("t0", t0)

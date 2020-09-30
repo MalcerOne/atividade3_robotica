@@ -33,6 +33,13 @@ if __name__=="__main__":
     
     max_angular = 0.4
     max_linear = 0.4
+    
+    vel_parado = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
+    vel_reto = Twist(Vector3(max_linear, 0, 0), Vector3(0, 0, 0))
+    vel_muda_direcao = Twist(Vector3(0, 0, 0), Vector3(0, 0, max_angular))
+
+    sleep_muda_direcao = abs(ang/max_angular)
+    sleep_reto = abs(dist/max_linear)
 
     while not rospy.is_shutdown():
         print("t0", t0)
@@ -44,13 +51,6 @@ if __name__=="__main__":
         elapsed = (t1 - t0)
         print("Passaram ", elapsed.secs, " segundos")
         rospy.sleep(1.0)
-
-        vel_parado = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
-        vel_reto = Twist(Vector3(max_linear, 0, 0), Vector3(0, 0, 0))
-        vel_muda_direcao = Twist(Vector3(0, 0, 0), Vector3(0, 0, max_angular))
-
-        sleep_muda_direcao = abs(ang/max_angular)
-        sleep_reto = abs(dist/max_linear)
         
         velocidade_saida.publish(zero)
             

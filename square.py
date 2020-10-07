@@ -6,40 +6,28 @@ import rospy
 from geometry_msgs.msg import Twist, Vector3
 import math
 
-
-n = None
-
-ang = None
-dist = None
-
-max_angular = None
-max_linear = None
-
-contador = 0
-pula = 100
-
 if __name__=="__main__":
 
     rospy.init_node("square")
 
     t0 = rospy.get_rostime()
 
-    velocidade_saida = rospy.Publisher("/cmd_vel", Twist, queue_size = 3 )
+    pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 3 )
     
-    n=1
+    n=0
     
-    ang = math.radians(90)
-    dist = 5
+    ang = math.radians(90.0)
+    dist = 2
     
-    max_angular = 0.4
-    max_linear = 0.4
+    w = 0.2
+    v = 0.2
     
-    vel_parado = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
-    vel_reto = Twist(Vector3(max_linear, 0, 0), Vector3(0, 0, 0))
-    vel_muda_direcao = Twist(Vector3(0, 0, 0), Vector3(0, 0, max_angular))
+    zero = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
+    frente = Twist(Vector3(v, 0, 0), Vector3(0, 0, 0))
+    gira = Twist(Vector3(0, 0, 0), Vector3(0, 0, w))
 
-    sleep_reto = abs(dist/max_linear)
-    sleep_muda_direcao = abs(ang/max_angular)
+    sleep_reto = dist/v
+    sleep_muda_direcao = ang/w
 
     while not rospy.is_shutdown():
         print("t0", t0)
@@ -51,27 +39,26 @@ if __name__=="__main__":
         elapsed = (t1 - t0)
         print("Passaram ", elapsed.secs, " segundos")
         rospy.sleep(1.0)
+
+        while n != 7:
+            if n % 2 != 0:
+                print("Girando")
+                pub.publish(gira)
+                rospy.sleep(sleep_muda_direcao)
+                pub.publish(zero)
+                rospy.sleep(0.1)
+                n += 1
+
+            if n % 2 == 0:
+                print("Andando reto")
+                pub.publish(frente)
+                rospy.sleep(sleep_reto)
+                pub.publish(zero)
+                rospy.sleep(0.1)
+                n += 1   
+                
+            rospy.sleep(1.0)
+
+        print("Quadrado desenhado!")
+            
         
-        velocidade_saida.publish(vel_parado)
-            
-        if n % 2 != 0:
-            print("Andando reto.")
-            print(vel_reto, "\n",  sleep_reto)
-            velocidade_saida.publish(vel_reto)
-            rospy.sleep(sleep_reto)
-            velocidade_saida.publish(vel_parado)
-            n+=1
-                
-        elif n % 2 == 0:
-            print("Mudando de direção.")
-            print(vel_muda_direcao, "\n",  sleep_muda_direcao)
-            velocidade_saida.publish(vel_muda_direcao)
-            rospy.sleep(sleep_muda_direcao)
-            velocidade_saida.publish(vel_parado)
-            n+=1
-                
-        else:
-            print("Alguma coisa deu errado.")
-            
-        if n % 8 == 0:
-            print("Terminou um ciclo")
